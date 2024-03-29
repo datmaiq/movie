@@ -1,38 +1,54 @@
-.App {
-  text-align: center;
+.css-ur2jdm-MuiContainer-root {
+  padding: 0px !important;
+  background: linear-gradient(
+    77deg,
+    rgba(0, 0, 0, 0.6),
+    transparent 85%
+  ) !important;
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body {
+  font-family: Ubuntu, sans-serif;
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.wrapped {
+  background-color: #111;
 }
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+.carousel-item .img-cover img {
+  margin-top: 3.875rem;
+  max-height: 50rem;
+}
+.info-film {
+  background-color: rgba(0, 0, 0, 0.3);
+  max-width: 35%;
+  padding: 12px;
+  border-radius: 10px;
+  /* opacity: 0.8; */
   color: white;
+  position: absolute;
+  top: 35%;
+  left: 10%;
+  z-index: 10;
+}
+.list-movie {
+  margin-top: 6.25rem;
+  /* border-radius: 8px; */
+  /* padding: 1.875rem; */
+}
+.list-movie img {
+  border-radius: 8px;
 }
 
-.App-link {
-  color: #61dafb;
+.swiper-button-prev:after {
+  color: #fff;
 }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.swiper-button-next:after {
+  color: #fff;
+}
+.title-list-movie {
+  margin-bottom: 1rem;
+  font-family: Ubuntu, sans-serif;
+  color: #fff;
+  font-size: 18px;
+  border-left: 2px solid red;
+  padding-left: 5px;
+  font-weight: bold;
 }
