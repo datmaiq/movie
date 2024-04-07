@@ -1,43 +1,71 @@
-import React, { useRef, useState } from "react";
-// Import Swiper React components
+import React, { useEffect, useState } from "react";
+
 import { Swiper, SwiperSlide } from "swiper/react";
 
-// Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "../App.css";
-import { useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 // import required modules
 import { Pagination, Navigation } from "swiper/modules";
+import { fetchData } from "../utils/fetchData";
 
-export default function App({ title, data }) {
-  const navigate = useNavigate();
+export default function ListMovie({ title, url, urlType }) {
+  const location = useLocation();
+
+  const [data, setData] = useState();
   // const [swiperRef, setSwiperRef] = useState(null);
+  useEffect(() => {
+    fetchData(url).then(({ results }) => {
+      setData(results);
+    });
+  }, []);
 
   return (
     <>
       <h1 className="title-list-movie">{title}</h1>
       <Swiper
-        // onSwiper={setSwiperRef}
-        slidesPerView={4}
+        slidesPerView={1}
         // centeredSlides={false}
         // spaceBetween={20}
         pagination={{
           type: "fraction",
         }}
+        breakpoints={{
+          640: {
+            slidesPerView: 2,
+            spaceBetween: 20,
+          },
+          768: {
+            slidesPerView: 3,
+            spaceBetween: 20,
+          },
+          1024: {
+            slidesPerView: 4,
+            spaceBetween: 20,
+          },
+        }}
         navigation={true}
         modules={[Pagination, Navigation]}
         className="mySwiper"
       >
-        {data?.map((item, index) => (
+        {data?.map((item) => (
           <SwiperSlide key={item.id}>
             {" "}
-            <img
-              onClick={() => navigate(`/movie/${item.id}`)}
-              src={`https://media.themoviedb.org/t/p/w300_and_h450_multi_faces${item.poster_path}`}
-              alt=""
-            />
+            <Link
+              to={`/movie`}
+              state={{
+                backgroundLocation: location,
+                id: item.id,
+                type: urlType,
+              }}
+            >
+              <img
+                src={`https://media.themoviedb.org/t/p/w300_and_h450_multi_faces${item.poster_path}`}
+                alt=""
+              />
+            </Link>
           </SwiperSlide>
         ))}
       </Swiper>

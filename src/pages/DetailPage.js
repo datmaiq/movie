@@ -1,16 +1,41 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import axios from "axios";
+import { Box, Modal } from "@mui/material";
 
-function DetailPage() {
-  const { id } = useParams();
-  const [movieId, setMovieId] = useState([]);
+function DetailPage({ searchTerm }) {
+  const style = {
+    width: "50",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    bgcolor: "background.paper",
+    borderRadius: 2,
+    boxShadow: 24,
+    border: "none",
+  };
+  let navigate = useNavigate();
+  let { state } = useLocation();
+  // const { id } = useParams();
+  const [movie, setMovie] = useState();
+  const [open, setOpen] = React.useState(true);
+
+  const handleClose = () => {
+    setOpen(false);
+    if (searchTerm) {
+      navigate("/search");
+    } else {
+      navigate("/");
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://api.themoviedb.org/3/movie/${id}`,
+          `https://api.themoviedb.org/3/${state.type}/${state.id}`,
           {
             headers: {
               Authorization:
@@ -18,35 +43,44 @@ function DetailPage() {
             },
           }
         );
-        console.log(id);
-        console.log(response.data);
-        setMovieId(response.data);
+
+        setMovie(response.data);
       } catch (error) {
         console.log(error);
       }
     };
     fetchData();
-    console.log(movieId);
   }, []);
 
-  return (
-    <div>
-      <div className="card text-bg-dark">
-        <img
-          src={`https://media.themoviedb.org/t/p/w1920_and_h800_multi_faces${movieId.poster_path}`}
-          className="card-img"
-          alt="..."
-        />
-        <div className="card-img-overlay">
-          <h1>{movieId.original_title}</h1>
-          <h5>Vote Average: {movieId.vote_average}</h5>
-          <p className="card-text">Release Date : {movieId.release_date}</p>
-          <p className="card-text">
-            <small>{movieId.overview}</small>
-          </p>
+  return movie ? (
+    <Modal
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Box sx={style}>
+        <div className="detail-card">
+          <div className="card text-bg-dark">
+            <img
+              src={`https://media.themoviedb.org/t/p/w1920_and_h800_multi_faces${movie.poster_path}`}
+              className="card-img"
+              alt="..."
+            />
+            <div className="card-img-overlay">
+              <h1>{movie.original_title}</h1>
+              <h5>Vote Average: {movie.vote_average}</h5>
+              <p className="card-text">Release Date : {movie.release_date}</p>
+              <p className="card-text">
+                <small>{movie.overview}</small>
+              </p>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      </Box>
+    </Modal>
+  ) : (
+    <div />
   );
 }
 
