@@ -34,17 +34,7 @@ function App() {
     console.log("searchValue", event.target.value);
     setSearchTerm(event.target.value);
   };
-  useEffect(() => {
-    if (deferredTerm) {
-      fetchData(`/search/movie?query=${deferredTerm}`).then((data) => {
-        // console.log(data);
-        setSearchValue(data.results);
-        navigate("/search");
-      });
-    } else {
-      navigate("/");
-    }
-  }, [deferredTerm]);
+
   const clearSearch = () => {
     setSearchTerm("");
     console.log("hi");
