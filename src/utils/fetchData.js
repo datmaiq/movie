@@ -9,7 +9,7 @@ export const fetchData = async (path) => {
       },
     });
 
-    console.log(response.data.results);
+    // console.log(response.data.results);
     return response.data;
   } catch (error) {
     console.log(error);

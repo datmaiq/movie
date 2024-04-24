@@ -20,7 +20,7 @@ export default function ListMovie({ title, url, urlType }) {
     fetchData(url).then(({ results }) => {
       setData(results);
     });
-  }, []);
+  }, [url]);
 
   return (
     <>

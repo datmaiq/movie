@@ -15,7 +15,6 @@ import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 
 import netflixlogo from "../logo/netflixlogo.png";
-import { useNavigate } from "react-router-dom";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -58,7 +57,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function Header({ handleSearch, searchTerm, clearSearch }) {
-  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -77,10 +75,6 @@ export default function Header({ handleSearch, searchTerm, clearSearch }) {
     setAnchorEl(null);
     handleMobileMenuClose();
   };
-
-  // const handleMobileMenuOpen = (event) => {
-  //   setMobileMoreAnchorEl(event.currentTarget);
-  // };
 
   const menuId = "primary-search-account-menu";
   const renderMenu = (
@@ -155,31 +149,19 @@ export default function Header({ handleSearch, searchTerm, clearSearch }) {
       </MenuItem>
     </Menu>
   );
-
+  console.log("searchterm", searchTerm);
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar sx={{ background: "black", mb: 30 }} position="fixed">
         <Toolbar>
           <img
-            onClick={() => {
-              clearSearch();
-              // console.log("hi", searchTerm);
-              navigate(`/`);
-            }}
+            onClick={clearSearch}
             src={netflixlogo}
             alt="abc"
             width=""
             height="30"
           />
-          {/* <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-          > */}
-          {/* <MenuIcon />
-          </IconButton> */}
+
           <Typography
             variant="h6"
             noWrap
@@ -191,10 +173,12 @@ export default function Header({ handleSearch, searchTerm, clearSearch }) {
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
+              value={searchTerm}
               placeholder="Search…"
               inputProps={{ "aria-label": "search" }}
             />
           </Search>
+
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}></Box>
           <Box sx={{ display: { xs: "flex", md: "none" } }}></Box>

@@ -18,7 +18,7 @@ function DetailPage({ searchTerm }) {
   };
   let navigate = useNavigate();
   let { state } = useLocation();
-  // const { id } = useParams();
+
   const [movie, setMovie] = useState();
   const [open, setOpen] = React.useState(true);
 
@@ -50,7 +50,7 @@ function DetailPage({ searchTerm }) {
       }
     };
     fetchData();
-  }, []);
+  }, [state]);
 
   return movie ? (
     <Modal

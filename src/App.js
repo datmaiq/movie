@@ -1,8 +1,11 @@
-import React, { useEffect, useState, useDeferredValue } from "react";
+import React, {
+  useEffect,
+  useState,
+  useDeferredValue,
+  useCallback,
+} from "react";
 import "./App.css";
 
-// import ListMovie from "./components/ListMovie";
-// import DetailCard from "./components/DetailCard";
 import Header from "./components/Header";
 import { fetchData } from "./utils/fetchData";
 import HomePage from "./pages/HomePage";
@@ -20,28 +23,23 @@ function App() {
   useEffect(() => {
     if (deferredTerm) {
       fetchData(`/search/movie?query=${deferredTerm}`).then((data) => {
-        // console.log(data);
         setSearchValue(data.results);
         navigate("/search");
       });
     } else {
       navigate("/");
     }
-  }, [deferredTerm]);
+  }, [deferredTerm, navigate]);
 
-  const handleSearch = (event) => {
-    // event.preventDefault();
-    console.log("searchValue", event.target.value);
+  const handleSearch = useCallback((event) => {
     setSearchTerm(event.target.value);
-  };
+  }, []);
 
-  const clearSearch = () => {
+  const clearSearch = useCallback(() => {
     setSearchTerm("");
-    console.log("hi");
-  };
+  }, []);
 
   return (
-    // <div className="wrapped">
     <>
       <Header
         searchTerm={searchTerm}
@@ -49,15 +47,9 @@ function App() {
         handleSearch={handleSearch}
       />
 
-      <Routes
-        location={
-          location.state?.backgroundLocation
-            ? location.state.backgroundLocation
-            : location
-        }
-      >
+      <Routes location={location.state?.backgroundLocation || location}>
         <Route path="/" element={<HomePage />}></Route>
-        {/* <Route path="/movie/:id" element={<DetailPage />}></Route> */}
+
         <Route
           path="/search"
           element={<SearchPage searchValue={searchValue} />}
