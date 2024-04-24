@@ -29,7 +29,8 @@ function App() {
     } else {
       navigate("/");
     }
-  }, [deferredTerm, navigate]);
+    // eslint-disable-next-line
+  }, [deferredTerm]);
 
   const handleSearch = useCallback((event) => {
     setSearchTerm(event.target.value);
