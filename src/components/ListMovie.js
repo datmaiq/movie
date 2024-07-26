@@ -1,25 +1,30 @@
 import React, { useEffect, useState } from "react";
-
 import { Swiper, SwiperSlide } from "swiper/react";
-
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "../App.css";
 import { Link, useLocation } from "react-router-dom";
-// import required modules
 import { Pagination, Navigation } from "swiper/modules";
 import { fetchData } from "../utils/fetchData";
 
 export default function ListMovie({ title, url, urlType }) {
   const location = useLocation();
+  const [data, setData] = useState([]);
 
-  const [data, setData] = useState();
-  // const [swiperRef, setSwiperRef] = useState(null);
   useEffect(() => {
-    fetchData(url).then(({ results }) => {
-      setData(results);
-    });
+    fetchData(url)
+      .then((data) => {
+        if (data && data.results) {
+          setData(data.results);
+        } else {
+          console.error("Data or results property is undefined");
+          setData([]);
+        }
+      })
+      .catch((error) => {
+        console.error("Error in fetchData:", error);
+      });
   }, [url]);
 
   return (
@@ -27,8 +32,6 @@ export default function ListMovie({ title, url, urlType }) {
       <h1 className="title-list-movie">{title}</h1>
       <Swiper
         slidesPerView={1}
-        // centeredSlides={false}
-        // spaceBetween={20}
         pagination={{
           type: "fraction",
         }}
@@ -50,9 +53,8 @@ export default function ListMovie({ title, url, urlType }) {
         modules={[Pagination, Navigation]}
         className="mySwiper"
       >
-        {data?.map((item) => (
+        {data.map((item) => (
           <SwiperSlide key={item.id}>
-            {" "}
             <Link
               to={`/movie`}
               state={{
