@@ -127,7 +127,7 @@ function DetailPage({ searchTerm, isOpen }) {
   let { state } = useLocation();
 
   const [movie, setMovie] = useState();
-  const [videoKey, setVideoKey] = useState(""); // State to store video key
+  const [videoKey, setVideoKey] = useState("");
 
   const handleClose = () => {
     if (searchTerm) {
@@ -150,7 +150,7 @@ function DetailPage({ searchTerm, isOpen }) {
           `${process.env.REACT_APP_BASE_URL}/${state.type}/${state.id}`,
           {
             headers: {
-              Authorization: process.env.REACT_APP_TMDB_API_KEY,
+              Authorization: `Bearer ${process.env.REACT_APP_TMDB_API_KEY}`,
             },
           }
         );
@@ -161,7 +161,7 @@ function DetailPage({ searchTerm, isOpen }) {
           `${process.env.REACT_APP_BASE_URL}/${state.type}/${state.id}/videos`,
           {
             headers: {
-              Authorization: process.env.REACT_APP_TMDB_API_KEY,
+              Authorization: `Bearer ${process.env.REACT_APP_TMDB_API_KEY}`,
             },
           }
         );
