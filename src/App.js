@@ -10,6 +10,7 @@ import Header from "./components/Header";
 import { fetchData } from "./utils/fetchData";
 import HomePage from "./pages/HomePage";
 import DetailPage from "./pages/DetailPage";
+import VideoPlayer from "./pages/VideoPlayer";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import SearchPage from "./pages/SearchPage";
 
@@ -38,6 +39,8 @@ function App() {
 
   const clearSearch = useCallback(() => {
     setSearchTerm("");
+    navigate("/");
+    // eslint-disable-next-line
   }, []);
 
   return (
@@ -50,7 +53,7 @@ function App() {
 
       <Routes location={location.state?.backgroundLocation || location}>
         <Route path="/" element={<HomePage />}></Route>
-
+        <Route path="/video/:videoKey" element={<VideoPlayer />} />
         <Route
           path="/search"
           element={<SearchPage searchValue={searchValue} />}

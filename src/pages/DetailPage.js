@@ -1,29 +1,135 @@
 import React, { useEffect, useState } from "react";
+import styled from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
-
 import axios from "axios";
-import { Box, Modal } from "@mui/material";
 
-function DetailPage({ searchTerm }) {
-  const style = {
-    width: "50",
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    bgcolor: "background.paper",
-    borderRadius: 2,
-    boxShadow: 24,
-    border: "none",
-  };
+const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+`;
+
+const ModalContainer = styled.div`
+  background: #181818;
+  width: 90%;
+  max-width: 800px;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+`;
+
+const Header = styled.div`
+  position: relative;
+  padding: 0;
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+`;
+
+const Content = styled.div`
+  padding: 20px;
+  color: white;
+`;
+
+const Title = styled.h2`
+  margin: 0;
+  font-size: 24px;
+`;
+
+const Description = styled.p`
+  margin: 10px 0;
+`;
+
+const Info = styled.div`
+  margin-top: 20px;
+`;
+
+const InfoItem = styled.p`
+  margin: 5px 0;
+`;
+
+const PlayButton = styled.button`
+  background: red;
+  color: white;
+  border: none;
+  padding: 10px 40px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 16px;
+  position: absolute;
+  bottom: 20px;
+  left: 3%;
+
+  @media (max-width: 768px) {
+    padding: 8px 30px;
+    font-size: 14px;
+    left: 5%;
+  }
+
+  @media (max-width: 480px) {
+    padding: 6px 20px;
+    font-size: 12px;
+    left: 10%;
+  }
+`;
+
+const PlusButton = styled.button`
+  background: transparent;
+  color: white;
+  margin-left: 30px;
+  font-weight: bold;
+  border: 1.5px solid white;
+  padding: 7px 15px;
+  cursor: pointer;
+  border-radius: 55%;
+  font-size: 20px;
+  position: absolute;
+  bottom: 20px;
+  left: 15%;
+
+  @media (max-width: 768px) {
+    padding: 6px 12px;
+    font-size: 18px;
+    left: 20%;
+  }
+
+  @media (max-width: 480px) {
+    padding: 5px 10px;
+    font-size: 16px;
+    left: 25%;
+  }
+`;
+
+const PosterImage = styled.img`
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+`;
+
+function DetailPage({ searchTerm, isOpen }) {
   let navigate = useNavigate();
   let { state } = useLocation();
 
   const [movie, setMovie] = useState();
-  const [open, setOpen] = React.useState(true);
+  const [videoKey, setVideoKey] = useState(""); // State to store video key
 
   const handleClose = () => {
-    setOpen(false);
     if (searchTerm) {
       navigate("/search");
     } else {
@@ -31,56 +137,76 @@ function DetailPage({ searchTerm }) {
     }
   };
 
+  const handlePlay = () => {
+    if (videoKey) {
+      navigate(`/video/${videoKey}`);
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          `https://api.themoviedb.org/3/${state.type}/${state.id}`,
+        const movieResponse = await axios.get(
+          `${process.env.REACT_APP_BASE_URL}/${state.type}/${state.id}`,
           {
             headers: {
-              Authorization:
-                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkY2I0OWVhMDMyZjQ3ZTgyNWUxOTAxZjgyZGY1OWQxOCIsInN1YiI6IjY2MDI2NjhmNjA2MjBhMDE3YzJlYzlhNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.3TM4MrLhXJLfzMK3X7x-g0JlyXxyHbK8Qhd0ZPcbSGM",
+              Authorization: process.env.REACT_APP_TMDB_API_KEY,
             },
           }
         );
 
-        setMovie(response.data);
+        setMovie(movieResponse.data);
+
+        const videoResponse = await axios.get(
+          `${process.env.REACT_APP_BASE_URL}/${state.type}/${state.id}/videos`,
+          {
+            headers: {
+              Authorization: process.env.REACT_APP_TMDB_API_KEY,
+            },
+          }
+        );
+
+        const videos = videoResponse.data.results;
+        if (videos.length > 0) {
+          setVideoKey(videos[0].key);
+        }
       } catch (error) {
         console.log(error);
       }
     };
+
     fetchData();
   }, [state]);
 
   return movie ? (
-    <Modal
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
-    >
-      <Box sx={style}>
-        <div className="detail-card">
-          <div className="card text-bg-dark">
-            <img
-              src={`https://media.themoviedb.org/t/p/w1920_and_h800_multi_faces${movie.poster_path}`}
-              className="card-img"
-              alt="..."
-            />
-            <div className="card-img-overlay">
-              <h1>{movie.original_title}</h1>
-              <h5>Vote Average: {movie.vote_average}</h5>
-              <p className="card-text">Release Date : {movie.release_date}</p>
-              <p className="card-text">
-                <small>{movie.overview}</small>
-              </p>
-            </div>
-          </div>
-        </div>
-      </Box>
-    </Modal>
+    <Overlay>
+      <ModalContainer>
+        <Header>
+          <CloseButton onClick={handleClose}>&times;</CloseButton>
+          <PlayButton onClick={handlePlay}>Play</PlayButton>
+          <PlusButton>+</PlusButton>
+          <PosterImage
+            src={`https://media.themoviedb.org/t/p/w1920_and_h800_multi_faces${movie.poster_path}`}
+            alt="Movie Poster"
+          />
+        </Header>
+        <Content>
+          <Title>{movie.original_title}</Title>
+          <Description>{movie.overview}</Description>
+          <Info>
+            <InfoItem>
+              <strong>Genres:</strong>{" "}
+              {movie.genres.map((genre) => genre.name).join(", ")}
+            </InfoItem>
+            <InfoItem>
+              <strong>Release date:</strong> {movie?.release_date}
+            </InfoItem>
+          </Info>
+        </Content>
+      </ModalContainer>
+    </Overlay>
   ) : (
-    <div />
+    <div></div>
   );
 }
 
