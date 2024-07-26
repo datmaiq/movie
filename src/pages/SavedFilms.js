@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
 
 const SavedFilmsContainer = styled.div`
   padding: 20px;
@@ -49,14 +48,12 @@ function SavedFilms() {
       <h1>My Lists</h1>
       <FilmGrid>
         {savedFilms.map((film) => (
-          <Link to={`/movie`}>
-            <FilmCard>
-              <FilmImage
-                src={`https://media.themoviedb.org/t/p/w300_and_h450_multi_faces${film.poster_path}`}
-                alt={film.original_title}
-              />
-            </FilmCard>
-          </Link>
+          <FilmCard>
+            <FilmImage
+              src={`https://media.themoviedb.org/t/p/w300_and_h450_multi_faces${film.poster_path}`}
+              alt={film.original_title}
+            />
+          </FilmCard>
         ))}
       </FilmGrid>
     </SavedFilmsContainer>

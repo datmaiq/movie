@@ -175,7 +175,9 @@ export default function Header({ handleSearch, searchTerm, clearSearch }) {
 
           <HeaderButton onClick={() => clearSearch()}>Home</HeaderButton>
 
-          <HeaderButton>New & Popular</HeaderButton>
+          <HeaderButton onClick={() => navigate("/")}>
+            New & Popular
+          </HeaderButton>
           <HeaderButton onClick={() => navigate("/save")}>My list</HeaderButton>
 
           <Box sx={{ flexGrow: 1 }} />

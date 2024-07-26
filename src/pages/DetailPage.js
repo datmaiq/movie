@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
@@ -35,9 +35,11 @@ const CloseButton = styled.button`
   position: absolute;
   top: 10px;
   right: 10px;
-  background: none;
-  border: none;
+  background: #181818;
+  border-radius: 50%;
   color: white;
+  height: 36px;
+  width: 36px;
   font-size: 24px;
   cursor: pointer;
 `;
@@ -62,6 +64,39 @@ const Info = styled.div`
 
 const InfoItem = styled.p`
   margin: 5px 0;
+`;
+
+const SaveButton = styled.button`
+  background: ${({ isSaved }) => (isSaved ? "transparent" : "transparent")};
+  color: ${({ isSaved }) => (isSaved ? "white" : "white")};
+  margin-left: 30px;
+  font-weight: bold;
+  border: 1.5px solid white;
+  padding: 5px 15px;
+  cursor: pointer;
+  border-radius: 55%;
+  font-size: 20px;
+  position: absolute;
+  bottom: 20px;
+  left: 15%;
+
+  &:hover {
+    background: ${({ isSaved }) => (isSaved ? "#fff" : "#fff")};
+    color: ${({ isSaved }) => (isSaved ? "#333" : "#333")};
+    border-color: ${({ isSaved }) => (isSaved ? "#fff" : "#333")};
+  }
+
+  @media (max-width: 768px) {
+    padding: 6px 12px;
+    font-size: 18px;
+    left: 20%;
+  }
+
+  @media (max-width: 480px) {
+    padding: 5px 10px;
+    font-size: 16px;
+    left: 25%;
+  }
 `;
 
 const PlayButton = styled.button`
@@ -94,51 +129,19 @@ const PlayButton = styled.button`
   }
 `;
 
-const PlusButton = styled.button`
-  background: transparent;
-  color: white;
-  margin-left: 30px;
-  font-weight: bold;
-  border: 1.5px solid white;
-  padding: 5px 15px;
-  cursor: pointer;
-  border-radius: 55%;
-  font-size: 20px;
-  position: absolute;
-  bottom: 20px;
-  left: 15%;
-
-  &:hover {
-    background: #fff;
-    color: #333;
-    border-color: #333;
-  }
-
-  @media (max-width: 768px) {
-    padding: 6px 12px;
-    font-size: 18px;
-    left: 20%;
-  }
-
-  @media (max-width: 480px) {
-    padding: 5px 10px;
-    font-size: 16px;
-    left: 25%;
-  }
-`;
-
 const PosterImage = styled.img`
   width: 100%;
   height: auto;
   object-fit: cover;
 `;
 
-function DetailPage({ searchTerm, isOpen }) {
+function DetailPage({ searchTerm }) {
   let navigate = useNavigate();
   let { state } = useLocation();
-
   const [movie, setMovie] = useState();
   const [videoKey, setVideoKey] = useState("");
+  const [isSaved, setIsSaved] = useState(false);
+  const modalRef = useRef(null);
 
   const handleClose = () => {
     if (searchTerm) {
@@ -162,8 +165,18 @@ function DetailPage({ searchTerm, isOpen }) {
         "savedFilms",
         JSON.stringify([...savedFilms, movie])
       );
+      setIsSaved(true);
+    } else {
+      savedFilms.splice(existingIndex, 1);
+      localStorage.setItem("savedFilms", JSON.stringify(savedFilms));
+      setIsSaved(false);
     }
-    navigate(`/save`);
+  };
+
+  const handleOverlayClick = (event) => {
+    if (modalRef.current && !modalRef.current.contains(event.target)) {
+      handleClose();
+    }
   };
 
   useEffect(() => {
@@ -193,6 +206,12 @@ function DetailPage({ searchTerm, isOpen }) {
         if (videos.length > 0) {
           setVideoKey(videos[0].key);
         }
+
+        const savedFilms = JSON.parse(localStorage.getItem("savedFilms")) || [];
+        const isFilmSaved = savedFilms.some(
+          (film) => film.id === movieResponse.data.id
+        );
+        setIsSaved(isFilmSaved);
       } catch (error) {
         console.log(error);
       }
@@ -202,12 +221,14 @@ function DetailPage({ searchTerm, isOpen }) {
   }, [state]);
 
   return movie ? (
-    <Overlay>
-      <ModalContainer>
+    <Overlay onClick={handleOverlayClick}>
+      <ModalContainer ref={modalRef}>
         <Header>
           <CloseButton onClick={() => handleClose()}>&times;</CloseButton>
           <PlayButton onClick={handlePlay}>Play</PlayButton>
-          <PlusButton onClick={handleSave}>+</PlusButton>
+          <SaveButton onClick={handleSave} isSaved={isSaved}>
+            {isSaved ? "−" : "+"}
+          </SaveButton>
           <PosterImage
             src={`https://media.themoviedb.org/t/p/w1920_and_h800_multi_faces${movie.poster_path}`}
             alt="Movie Poster"
