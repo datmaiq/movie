@@ -13,6 +13,7 @@ import DetailPage from "./pages/DetailPage";
 import VideoPlayer from "./pages/VideoPlayer";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import SearchPage from "./pages/SearchPage";
+import SavedFilms from "./pages/SavedFilms";
 
 function App() {
   let navigate = useNavigate();
@@ -53,6 +54,7 @@ function App() {
 
       <Routes location={location.state?.backgroundLocation || location}>
         <Route path="/" element={<HomePage />}></Route>
+        <Route path="/save" element={<SavedFilms />}></Route>
         <Route path="/video/:videoKey" element={<VideoPlayer />} />
         <Route
           path="/search"

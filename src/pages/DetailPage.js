@@ -76,6 +76,11 @@ const PlayButton = styled.button`
   bottom: 20px;
   left: 3%;
 
+  &:hover {
+    background: #ff3333;
+    color: #fff;
+  }
+
   @media (max-width: 768px) {
     padding: 8px 30px;
     font-size: 14px;
@@ -95,13 +100,19 @@ const PlusButton = styled.button`
   margin-left: 30px;
   font-weight: bold;
   border: 1.5px solid white;
-  padding: 7px 15px;
+  padding: 5px 15px;
   cursor: pointer;
   border-radius: 55%;
   font-size: 20px;
   position: absolute;
   bottom: 20px;
   left: 15%;
+
+  &:hover {
+    background: #fff;
+    color: #333;
+    border-color: #333;
+  }
 
   @media (max-width: 768px) {
     padding: 6px 12px;
@@ -143,6 +154,18 @@ function DetailPage({ searchTerm, isOpen }) {
     }
   };
 
+  const handleSave = () => {
+    const savedFilms = JSON.parse(localStorage.getItem("savedFilms")) || [];
+    const existingIndex = savedFilms.findIndex((film) => film.id === movie.id);
+    if (existingIndex === -1) {
+      localStorage.setItem(
+        "savedFilms",
+        JSON.stringify([...savedFilms, movie])
+      );
+    }
+    navigate(`/save`);
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -182,9 +205,9 @@ function DetailPage({ searchTerm, isOpen }) {
     <Overlay>
       <ModalContainer>
         <Header>
-          <CloseButton onClick={handleClose}>&times;</CloseButton>
+          <CloseButton onClick={() => handleClose()}>&times;</CloseButton>
           <PlayButton onClick={handlePlay}>Play</PlayButton>
-          <PlusButton>+</PlusButton>
+          <PlusButton onClick={handleSave}>+</PlusButton>
           <PosterImage
             src={`https://media.themoviedb.org/t/p/w1920_and_h800_multi_faces${movie.poster_path}`}
             alt="Movie Poster"

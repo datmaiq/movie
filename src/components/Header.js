@@ -4,7 +4,7 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
+
 import InputBase from "@mui/material/InputBase";
 import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
@@ -13,7 +13,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-
+import { useNavigate } from "react-router-dom";
 import netflixlogo from "../logo/netflixlogo.png";
 
 const Search = styled("div")(({ theme }) => ({
@@ -46,7 +46,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "inherit",
   "& .MuiInputBase-input": {
     padding: theme.spacing(1, 1, 1, 0),
-
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create("width"),
     width: "100%",
@@ -55,13 +54,24 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
   },
 }));
+const HeaderButton = styled("button")({
+  backgroundColor: "transparent",
+  color: "#fff",
+  border: "none",
+  fontSize: "16px",
+  cursor: "pointer",
+  padding: "10px 20px",
+  "&:hover": {
+    textDecoration: "underline",
+  },
+});
 
 export default function Header({ handleSearch, searchTerm, clearSearch }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const navigate = useNavigate();
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -149,7 +159,7 @@ export default function Header({ handleSearch, searchTerm, clearSearch }) {
       </MenuItem>
     </Menu>
   );
-  console.log("searchterm", searchTerm);
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar sx={{ background: "black", mb: 30 }} position="fixed">
@@ -161,13 +171,14 @@ export default function Header({ handleSearch, searchTerm, clearSearch }) {
             width=""
             height="30"
           />
+          <Box sx={{ flexGrow: 1 }} />
 
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ display: { xs: "none", sm: "block" } }}
-          ></Typography>
+          <HeaderButton onClick={() => clearSearch()}>Home</HeaderButton>
+
+          <HeaderButton>New & Popular</HeaderButton>
+          <HeaderButton onClick={() => navigate("/save")}>My list</HeaderButton>
+
+          <Box sx={{ flexGrow: 1 }} />
           <Search value={searchTerm} onChange={handleSearch}>
             <SearchIconWrapper>
               <SearchIcon />
@@ -178,8 +189,6 @@ export default function Header({ handleSearch, searchTerm, clearSearch }) {
               inputProps={{ "aria-label": "search" }}
             />
           </Search>
-
-          <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}></Box>
           <Box sx={{ display: { xs: "flex", md: "none" } }}></Box>
         </Toolbar>
