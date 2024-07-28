@@ -14,7 +14,8 @@ import VideoPlayer from "./components/VideoPlayer";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import SearchPage from "./pages/SearchPage";
 import SavedFilms from "./pages/SavedFilms";
-
+import MoviePage from "./pages/MoviePage";
+import TvPage from "./pages/TvPage";
 function App() {
   let navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
@@ -48,12 +49,15 @@ function App() {
     <>
       <Header
         searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
         clearSearch={clearSearch}
         handleSearch={handleSearch}
       />
 
       <Routes location={location.state?.backgroundLocation || location}>
         <Route path="/" element={<HomePage />}></Route>
+        <Route path="/genre1" element={<MoviePage />}></Route>
+        <Route path="/genre2" element={<TvPage />}></Route>
         <Route path="/save" element={<SavedFilms />}></Route>
         <Route path="/video/:videoKey" element={<VideoPlayer />} />
         <Route

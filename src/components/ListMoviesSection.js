@@ -1,7 +1,5 @@
-// src/components/ListMoviesSection.js
-
 import React from "react";
-import ListMovie from "../components/ListMovie";
+import ListMovie from "./ListMovie";
 
 const ListMoviesSection = ({ movies }) => {
   return (
