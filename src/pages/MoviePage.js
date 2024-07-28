@@ -58,7 +58,7 @@ const movieCategories = [
 function MoviePage() {
   const [savedFilms, setSavedFilms] = useState([]);
   const [genres, setGenres] = useState([]);
-  const [selectedGenre, setSelectedGenre] = useState(null);
+
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
@@ -70,7 +70,6 @@ function MoviePage() {
   };
 
   const handleGenreClick = async (genreId) => {
-    setSelectedGenre(genreId);
     const data = await fetchData(`/discover/movie?with_genres=${genreId}`);
     if (data && data.results) {
       setSavedFilms(data.results);
