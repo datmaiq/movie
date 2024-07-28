@@ -10,7 +10,7 @@ import Header from "./components/Header";
 import { fetchData } from "./utils/fetchData";
 import HomePage from "./pages/HomePage";
 import DetailPage from "./pages/DetailPage";
-import VideoPlayer from "./pages/VideoPlayer";
+import VideoPlayer from "./components/VideoPlayer";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import SearchPage from "./pages/SearchPage";
 import SavedFilms from "./pages/SavedFilms";

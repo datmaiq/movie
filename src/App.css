@@ -90,13 +90,10 @@ body {
 .wrap-search img {
   width: 100%;
 }
-/* .text-bg-dark img {
-  width: 60%;
-  height: 80%;
-} */
+
 .wrap-search {
   margin-top: 25px;
-  /* width: 100%; */
+
   height: 100%;
   min-height: 800px;
 }
