@@ -17,19 +17,16 @@ const Header = styled.div`
 `;
 
 const FilmGrid = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5%;
-
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 20px;
   justify-content: center;
 `;
 
 const FilmCard = styled.div`
   background: #333;
   border-radius: 8px;
-  margin-bottom: 15px;
   overflow: hidden;
-  width: 150px; /* Adjust the width as needed */
   cursor: pointer;
 `;
 
@@ -57,11 +54,11 @@ const tvSeriesCategories = [
   },
 ];
 
-function MoviePage() {
+function TVPage() {
   const [savedTv, setSavedTv] = useState([]);
   const [genres, setGenres] = useState([]);
-
   const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedGenre, setSelectedGenre] = useState("Genre");
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -71,11 +68,12 @@ function MoviePage() {
     setAnchorEl(null);
   };
 
-  const handleGenreClick = async (genreId) => {
+  const handleGenreClick = async (genreId, genreName) => {
     const data = await fetchData(`/discover/tv?with_genres=${genreId}`);
     if (data && data.results) {
       setSavedTv(data.results);
     }
+    setSelectedGenre(genreName);
     handleClose();
   };
 
@@ -134,7 +132,7 @@ function MoviePage() {
             boxShadow: "inset 0 0 0 1px #fff",
           }}
         >
-          Genre
+          {selectedGenre}
         </Button>
         <Menu
           id="simple-menu"
@@ -144,7 +142,10 @@ function MoviePage() {
           onClose={handleClose}
         >
           {genres.map((genre) => (
-            <MenuItem key={genre.id} onClick={() => handleGenreClick(genre.id)}>
+            <MenuItem
+              key={genre.id}
+              onClick={() => handleGenreClick(genre.id, genre.name)}
+            >
               {genre.name}
             </MenuItem>
           ))}
@@ -164,4 +165,4 @@ function MoviePage() {
   );
 }
 
-export default MoviePage;
+export default TVPage;
