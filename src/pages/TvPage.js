@@ -155,8 +155,8 @@ function TVPage() {
         </Menu>
       </Header>
       <FilmGrid>
-        {savedTv.map((film) => (
-          <FilmCard key={film.id}>
+        {savedTv.map((film, index) => (
+          <FilmCard key={index}>
             <Link
               to={`/movie/${film.id}`}
               state={{

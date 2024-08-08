@@ -158,7 +158,6 @@ function DetailPage() {
     const existingIndex = savedFilms.findIndex((film) => film.id === media.id);
 
     if (existingIndex === -1) {
-      // Add type property to the media object
       const filmToSave = { ...media, type: state.type };
       localStorage.setItem(
         "savedFilms",
@@ -170,6 +169,9 @@ function DetailPage() {
       localStorage.setItem("savedFilms", JSON.stringify(savedFilms));
       setIsSaved(false);
     }
+
+    // Dispatch custom event to notify about the update
+    window.dispatchEvent(new Event("storageUpdate"));
   };
 
   const handleOverlayClick = (event) => {
