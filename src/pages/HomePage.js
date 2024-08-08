@@ -1,11 +1,12 @@
-// src/pages/HomePage.js
-
 import React from "react";
 import Trailer from "../components/Trailer";
 import ListMoviesSection from "../components/ListMoviesSection";
 import Footer from "../components/Footer";
+import MoviePage from "./MoviePage";
+import TvPage from "./TvPage";
+import SavedFilms from "./SavedFilms";
 
-function HomePage() {
+function HomePage({ activeSection }) {
   const movies = [
     {
       title: "Top Trending Movie",
@@ -21,8 +22,15 @@ function HomePage() {
 
   return (
     <>
-      <Trailer />
-      <ListMoviesSection movies={movies} />
+      {activeSection === "home" && (
+        <>
+          <Trailer />
+          <ListMoviesSection movies={movies} />
+        </>
+      )}
+      {activeSection === "movies" && <MoviePage />}
+      {activeSection === "tv" && <TvPage />}
+      {activeSection === "myList" && <SavedFilms />}
       <Footer />
     </>
   );

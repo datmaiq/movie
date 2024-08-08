@@ -56,7 +56,7 @@ export default function ListMovie({ title, url, urlType }) {
         {data.map((item) => (
           <SwiperSlide key={item.id}>
             <Link
-              to={`/movie`}
+              to={`/movie/${item.id}`}
               state={{
                 backgroundLocation: location,
                 id: item.id,

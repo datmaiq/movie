@@ -135,20 +135,16 @@ const PosterImage = styled.img`
   object-fit: cover;
 `;
 
-function DetailPage({ searchTerm }) {
+function DetailPage() {
   let navigate = useNavigate();
   let { state } = useLocation();
-  const [movie, setMovie] = useState();
+  const [media, setMedia] = useState();
   const [videoKey, setVideoKey] = useState("");
   const [isSaved, setIsSaved] = useState(false);
   const modalRef = useRef(null);
 
   const handleClose = () => {
-    if (searchTerm) {
-      navigate("/search");
-    } else {
-      navigate("/");
-    }
+    navigate(state?.backgroundLocation?.pathname || "/");
   };
 
   const handlePlay = () => {
@@ -159,11 +155,14 @@ function DetailPage({ searchTerm }) {
 
   const handleSave = () => {
     const savedFilms = JSON.parse(localStorage.getItem("savedFilms")) || [];
-    const existingIndex = savedFilms.findIndex((film) => film.id === movie.id);
+    const existingIndex = savedFilms.findIndex((film) => film.id === media.id);
+
     if (existingIndex === -1) {
+      // Add type property to the media object
+      const filmToSave = { ...media, type: state.type };
       localStorage.setItem(
         "savedFilms",
-        JSON.stringify([...savedFilms, movie])
+        JSON.stringify([...savedFilms, filmToSave])
       );
       setIsSaved(true);
     } else {
@@ -182,8 +181,9 @@ function DetailPage({ searchTerm }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const movieResponse = await axios.get(
-          `${process.env.REACT_APP_BASE_URL}/${state.type}/${state.id}`,
+        const mediaType = state.type === "movie" ? "movie" : "tv";
+        const mediaResponse = await axios.get(
+          `${process.env.REACT_APP_BASE_URL}/${mediaType}/${state.id}`,
           {
             headers: {
               Authorization: `Bearer ${process.env.REACT_APP_TMDB_API_KEY}`,
@@ -191,10 +191,10 @@ function DetailPage({ searchTerm }) {
           }
         );
 
-        setMovie(movieResponse.data);
+        setMedia(mediaResponse.data);
 
         const videoResponse = await axios.get(
-          `${process.env.REACT_APP_BASE_URL}/${state.type}/${state.id}/videos`,
+          `${process.env.REACT_APP_BASE_URL}/${mediaType}/${state.id}/videos`,
           {
             headers: {
               Authorization: `Bearer ${process.env.REACT_APP_TMDB_API_KEY}`,
@@ -209,7 +209,7 @@ function DetailPage({ searchTerm }) {
 
         const savedFilms = JSON.parse(localStorage.getItem("savedFilms")) || [];
         const isFilmSaved = savedFilms.some(
-          (film) => film.id === movieResponse.data.id
+          (film) => film.id === mediaResponse.data.id
         );
         setIsSaved(isFilmSaved);
       } catch (error) {
@@ -220,7 +220,7 @@ function DetailPage({ searchTerm }) {
     fetchData();
   }, [state]);
 
-  return movie ? (
+  return media ? (
     <Overlay onClick={handleOverlayClick}>
       <ModalContainer ref={modalRef}>
         <Header>
@@ -230,20 +230,25 @@ function DetailPage({ searchTerm }) {
             {isSaved ? "−" : "+"}
           </SaveButton>
           <PosterImage
-            src={`https://media.themoviedb.org/t/p/w1920_and_h800_multi_faces${movie.poster_path}`}
-            alt="Movie Poster"
+            src={`https://media.themoviedb.org/t/p/w1920_and_h800_multi_faces${media.poster_path}`}
+            alt="Media Poster"
           />
         </Header>
         <Content>
-          <Title>{movie.original_title}</Title>
-          <Description>{movie.overview}</Description>
+          <Title>
+            {state.type === "movie" ? media.original_title : media.name}
+          </Title>
+          <Description>{media.overview}</Description>
           <Info>
             <InfoItem>
               <strong>Genres:</strong>{" "}
-              {movie.genres.map((genre) => genre.name).join(", ")}
+              {media.genres.map((genre) => genre.name).join(", ")}
             </InfoItem>
             <InfoItem>
-              <strong>Release date:</strong> {movie?.release_date}
+              <strong>
+                {state.type === "movie" ? "Release date:" : "First air date:"}
+              </strong>{" "}
+              {media.release_date || media.first_air_date}
             </InfoItem>
           </Info>
         </Content>

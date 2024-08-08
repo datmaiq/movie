@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Footer from "../components/Footer";
 
 const SearchPageContainer = styled.div`
@@ -38,7 +38,6 @@ const FilmImage = styled.img`
 
 function SearchPage({ searchValue }) {
   const location = useLocation();
-  const navigate = useNavigate();
 
   return (
     <SearchPageContainer>
@@ -56,11 +55,11 @@ function SearchPage({ searchValue }) {
       </Header>
       <FilmGrid>
         {searchValue
-          ?.filter((item) => item.poster_path) // Only include items with a poster_path
-          .map((item) => (
-            <FilmCard key={item.id}>
+          ?.filter((item) => item.poster_path)
+          .map((item, index) => (
+            <FilmCard key={index}>
               <Link
-                to={`/movie`}
+                to={`/movie/${item.id}`}
                 state={{
                   backgroundLocation: location,
                   id: item.id,
@@ -68,7 +67,6 @@ function SearchPage({ searchValue }) {
                 }}
               >
                 <FilmImage
-                  onClick={() => navigate(`/movie/${item.id}`)}
                   src={`https://media.themoviedb.org/t/p/w300_and_h450_multi_faces${item.poster_path}`}
                   alt={item.title || item.name}
                 />

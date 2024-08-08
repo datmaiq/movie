@@ -13,16 +13,16 @@ import DetailPage from "./pages/DetailPage";
 import VideoPlayer from "./components/VideoPlayer";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import SearchPage from "./pages/SearchPage";
-import SavedFilms from "./pages/SavedFilms";
-import MoviePage from "./pages/MoviePage";
-import TvPage from "./pages/TvPage";
+
 function App() {
   let navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [searchValue, setSearchValue] = useState([]);
+  const [activeSection, setActiveSection] = useState("home");
   const deferredTerm = useDeferredValue(searchTerm);
   const location = useLocation();
-  let state = location.state;
+  const state = location.state;
+
   useEffect(() => {
     if (deferredTerm) {
       fetchData(`/search/movie?query=${deferredTerm}`).then((data) => {
@@ -52,28 +52,23 @@ function App() {
         setSearchTerm={setSearchTerm}
         clearSearch={clearSearch}
         handleSearch={handleSearch}
+        setActiveSection={setActiveSection}
       />
 
-      <Routes location={location.state?.backgroundLocation || location}>
-        <Route path="/" element={<HomePage />}></Route>
-        <Route path="/genre1" element={<MoviePage />}></Route>
-        <Route path="/genre2" element={<TvPage />}></Route>
-        <Route path="/save" element={<SavedFilms />}></Route>
+      <Routes location={state?.backgroundLocation || location}>
+        <Route path="/" element={<HomePage activeSection={activeSection} />} />
         <Route path="/video/:videoKey" element={<VideoPlayer />} />
         <Route
           path="/search"
           element={<SearchPage searchValue={searchValue} />}
-        ></Route>
+        />
       </Routes>
+
       {state?.backgroundLocation && (
         <Routes>
-          <Route
-            path="/movie"
-            element={<DetailPage searchTerm={searchTerm} />}
-          ></Route>
+          <Route path="/movie/:id" element={<DetailPage />} />
         </Routes>
       )}
-      {/* </div> */}
     </>
   );
 }

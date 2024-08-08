@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { fetchData } from "../utils/fetchData";
 import { Button, Menu, MenuItem } from "@mui/material";
+import { Link, useLocation } from "react-router-dom";
 
 const SavedFilmsContainer = styled.div`
   padding: 20px;
@@ -59,6 +60,7 @@ function MoviePage() {
   const [genres, setGenres] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedGenre, setSelectedGenre] = useState("Genre");
+  const location = useLocation();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -125,7 +127,7 @@ function MoviePage() {
           style={{
             color: "#fff",
             marginLeft: "20px",
-            padding: "1px",
+            padding: "5px",
             backgroundColor: "transparent",
             boxShadow: "inset 0 0 0 1px #fff",
           }}
@@ -152,10 +154,20 @@ function MoviePage() {
       <FilmGrid>
         {savedFilms.map((film) => (
           <FilmCard key={film.id}>
-            <FilmImage
-              src={`https://media.themoviedb.org/t/p/w300_and_h450_multi_faces${film.poster_path}`}
-              alt={film.original_title}
-            />
+            <Link
+              to={`/movie/${film.id}`}
+              state={{
+                backgroundLocation: location,
+                id: film.id,
+                type: "movie",
+              }}
+              style={{ textDecoration: "none" }}
+            >
+              <FilmImage
+                src={`https://media.themoviedb.org/t/p/w300_and_h450_multi_faces${film.poster_path}`}
+                alt={film.original_title}
+              />
+            </Link>
           </FilmCard>
         ))}
       </FilmGrid>

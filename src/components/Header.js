@@ -1,20 +1,18 @@
-import * as React from "react";
+import React, { useState } from "react";
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
-
 import InputBase from "@mui/material/InputBase";
-import Badge from "@mui/material/Badge";
-import MenuItem from "@mui/material/MenuItem";
-import Menu from "@mui/material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
+import netflixlogo from "../logo/netflixlogo.png";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import AccountCircle from "@mui/icons-material/AccountCircle";
+import Badge from "@mui/material/Badge";
 import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import { useNavigate } from "react-router-dom";
-import netflixlogo from "../logo/netflixlogo.png";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -54,6 +52,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
   },
 }));
+
 const HeaderButton = styled("button")({
   backgroundColor: "transparent",
   color: "#fff",
@@ -66,12 +65,16 @@ const HeaderButton = styled("button")({
   },
 });
 
-export default function Header({ handleSearch, searchTerm, clearSearch }) {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+export default function Header({
+  handleSearch,
+  searchTerm,
+  clearSearch,
+  setActiveSection,
+}) {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-  const navigate = useNavigate();
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -165,23 +168,42 @@ export default function Header({ handleSearch, searchTerm, clearSearch }) {
       <AppBar sx={{ background: "black", mb: 30 }} position="fixed">
         <Toolbar>
           <img
-            onClick={clearSearch}
+            onClick={() => {
+              clearSearch();
+              setActiveSection("home");
+            }}
             src={netflixlogo}
-            alt="abc"
-            width=""
+            alt="Netflix Logo"
             height="30"
           />
           <Box sx={{ flexGrow: 1 }} />
-
-          <HeaderButton onClick={() => clearSearch()}>Home</HeaderButton>
-
-          <HeaderButton onClick={() => navigate("/genre1")}>
+          <HeaderButton
+            onClick={() => {
+              clearSearch();
+              setActiveSection("home");
+            }}
+          >
+            Home
+          </HeaderButton>
+          <HeaderButton
+            onClick={() => {
+              clearSearch();
+              setActiveSection("movies");
+            }}
+          >
             Movies
           </HeaderButton>
-          <HeaderButton onClick={() => navigate("/genre2")}>TV</HeaderButton>
-
-          <HeaderButton onClick={() => navigate("/save")}>My list</HeaderButton>
-
+          <HeaderButton
+            onClick={() => {
+              clearSearch();
+              setActiveSection("tv");
+            }}
+          >
+            TV
+          </HeaderButton>
+          <HeaderButton onClick={() => setActiveSection("myList")}>
+            My List
+          </HeaderButton>
           <Box sx={{ flexGrow: 1 }} />
           <Search value={searchTerm} onChange={handleSearch}>
             <SearchIconWrapper>
@@ -193,8 +215,6 @@ export default function Header({ handleSearch, searchTerm, clearSearch }) {
               inputProps={{ "aria-label": "search" }}
             />
           </Search>
-          <Box sx={{ display: { xs: "none", md: "flex" } }}></Box>
-          <Box sx={{ display: { xs: "flex", md: "none" } }}></Box>
         </Toolbar>
       </AppBar>
       {renderMobileMenu}

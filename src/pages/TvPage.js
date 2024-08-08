@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { fetchData } from "../utils/fetchData";
 import { Button, Menu, MenuItem } from "@mui/material";
+import { Link, useLocation } from "react-router-dom";
 
 const SavedFilmsContainer = styled.div`
   padding: 20px;
@@ -59,6 +60,7 @@ function TVPage() {
   const [genres, setGenres] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedGenre, setSelectedGenre] = useState("Genre");
+  const location = useLocation();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -93,6 +95,7 @@ function TVPage() {
       const allTVSeries = [];
       for (const category of tvSeriesCategories) {
         const data = await fetchData(category.url);
+        console.log(data);
         if (data && data.results) {
           allTVSeries.push(...data.results);
         }
@@ -127,7 +130,7 @@ function TVPage() {
           style={{
             color: "#fff",
             marginLeft: "20px",
-            padding: "1px",
+            padding: "5px",
             backgroundColor: "transparent",
             boxShadow: "inset 0 0 0 1px #fff",
           }}
@@ -154,10 +157,20 @@ function TVPage() {
       <FilmGrid>
         {savedTv.map((film) => (
           <FilmCard key={film.id}>
-            <FilmImage
-              src={`https://media.themoviedb.org/t/p/w300_and_h450_multi_faces${film.poster_path}`}
-              alt={film.original_name}
-            />
+            <Link
+              to={`/movie/${film.id}`}
+              state={{
+                backgroundLocation: location,
+                id: film.id,
+                type: "tv",
+              }}
+              style={{ textDecoration: "none" }}
+            >
+              <FilmImage
+                src={`https://media.themoviedb.org/t/p/w300_and_h450_multi_faces${film.poster_path}`}
+                alt={film.original_name}
+              />
+            </Link>
           </FilmCard>
         ))}
       </FilmGrid>
