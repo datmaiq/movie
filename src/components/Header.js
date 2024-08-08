@@ -201,7 +201,12 @@ export default function Header({
           >
             TV
           </HeaderButton>
-          <HeaderButton onClick={() => setActiveSection("myList")}>
+          <HeaderButton
+            onClick={() => {
+              clearSearch();
+              setActiveSection("myList");
+            }}
+          >
             My List
           </HeaderButton>
           <Box sx={{ flexGrow: 1 }} />
