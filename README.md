@@ -10,8 +10,9 @@ You can view the live demo of the application [here](https://dat-movie.netlify.a
 
 - Browse movies and view details
 - Play movie trailers
-- Save movies to a list
-- Client-side routing with React Router
+- Save,remove movies to a favorite list
+- Search for movies using partial or similar characters
+- Filter and view movies and TV shows by genre
 
 ## Technologies Used
 
@@ -37,4 +38,25 @@ Clone the repository using Git:
 ```bash
 git clone https://github.com/datmaiq/movie.git
 cd movie
+```
+
+### Install Dependencies
+
+Navigate to the project directory and install the required dependencies:
+
+```bash
+npm install
+# or
+yarn install
+```
+
+### Install Dependencies
+
+Navigate to the project directory and install the required dependencies:
+
+```bash
+npm start
+# or
+yarn start
+
 ```
