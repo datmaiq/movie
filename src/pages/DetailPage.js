@@ -170,7 +170,7 @@ function DetailPage() {
       setIsSaved(false);
     }
 
-    // Dispatch custom event to notify about the update
+
     window.dispatchEvent(new Event("storageUpdate"));
   };
 

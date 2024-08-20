@@ -59,14 +59,12 @@ function SavedFilms() {
       fetchSavedFilms();
     };
 
-    // Listen to the custom event triggered when localStorage is updated
     window.addEventListener("storageUpdate", handleStorageUpdate);
 
-    // Clean up the event listener when the component unmounts
     return () => {
       window.removeEventListener("storageUpdate", handleStorageUpdate);
     };
-  }, []); // <- Empty dependency array ensures this runs only on mount
+  }, []);
 
   return (
     <SavedFilmsContainer>

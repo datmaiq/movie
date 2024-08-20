@@ -1,5 +1,7 @@
 # Movie App
 
+![Demo Image](public/demo.png)
+
 A web application to browse and manage movies. This project is built with React and hosted on Netlify.
 
 ## Demo
@@ -50,9 +52,9 @@ npm install
 yarn install
 ```
 
-### Install Dependencies
+### Start the Development Server
 
-Navigate to the project directory and install the required dependencies:
+Run the development server to start the application
 
 ```bash
 npm start
